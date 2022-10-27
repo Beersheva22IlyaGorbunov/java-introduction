@@ -59,6 +59,11 @@ public class BitOperations {
 	 */
 	static public long inverseBitValue(long number, int nBit) {
 		//TODO
-		return -1;
+		long result = -1;
+		if (checkNbit(nBit)) {
+			long mask = 1 << nBit; // all bits are 0 except bit number nBit
+			result = number ^ mask;
+		}
+		return result;
 	}
 }

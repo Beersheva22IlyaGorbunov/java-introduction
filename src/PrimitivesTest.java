@@ -61,7 +61,6 @@ class PrimitivesTest {
 	}
 	
 	@Test
-	@Disabled
 	void invertBitValueTest() {
 		long number = 0x3ab7f5; // 001110101011011111_1_10101
 		assertEquals(0x3ab7d5, BitOperations.inverseBitValue(number, 5));
