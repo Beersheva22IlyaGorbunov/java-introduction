@@ -1,10 +1,12 @@
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 class PrimitivesTest {
 
 	@Test
+	@Disabled
 	void dataTypeTest() {
 		int i = 10;
 		short a = 20;
@@ -18,6 +20,7 @@ class PrimitivesTest {
 	}
 	
 	@Test
+	@Disabled
 	void operatorsTest() {
 		int number = 123;
 		assertEquals(3, getThirdDigit(number));
@@ -40,4 +43,28 @@ class PrimitivesTest {
 		return number % 10;
 	}
 
+	@Test
+	void getBitValueTest() {
+		long number = 0x3ab7f5; // 001110101011_0_11111_1_101_0_1
+		assertEquals(1, BitOperations.getBitValue(number, 5));
+		assertEquals(0, BitOperations.getBitValue(number,11));
+		assertEquals(0, BitOperations.getBitValue(number, 1));
+		assertEquals(1, BitOperations.getBitValue(number, 2));
+		assertEquals(-1, BitOperations.getBitValue(number, 100));
+	}
+	
+	@Test
+	void setBitValueTest() {
+		long number = 0x3ab7f5; // 001110101011011111_1_10101
+		assertEquals(0x3ab7d5, BitOperations.setBitValue(number, 5, false));
+		assertEquals(0x3ab7f5, BitOperations.setBitValue(number, 5, true));
+	}
+	
+	@Test
+	@Disabled
+	void invertBitValueTest() {
+		long number = 0x3ab7f5; // 001110101011011111_1_10101
+		assertEquals(0x3ab7d5, BitOperations.inverseBitValue(number, 5));
+		assertEquals(0x3ab7f4, BitOperations.inverseBitValue(number, 0));
+	}
 }
