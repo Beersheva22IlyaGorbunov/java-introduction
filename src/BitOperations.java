@@ -41,11 +41,13 @@ public class BitOperations {
 		//TODO
 		long result = -1;
 		if (checkNbit(nBit)) {
-			long mask = 1 << nBit; // all bits are 0 except bit number nBit
+			
 			if (value) {
+				long mask = 1 << nBit; // all bits are 0 except bit number nBit
 				result = number | mask;
 			} else {
-				result = ~(~number | mask);
+				long mask = ~(1 << nBit); // all bits are 1 except bit number nBit
+				result = number & mask;
 			}
 		}
 		return result;
