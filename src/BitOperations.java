@@ -16,7 +16,7 @@ public class BitOperations {
 		//TODO
 		int result = -1;
 		if (checkNbit(nBit)) {
-			long mask = 1 << nBit; // all bits are 0 except bit number nBit
+			long mask = 1L << nBit; // all bits are 0 except bit number nBit
 			if ((number & mask) != 0) {
 				result = 1;
 			} else {
@@ -43,10 +43,10 @@ public class BitOperations {
 		if (checkNbit(nBit)) {
 			
 			if (value) {
-				long mask = 1 << nBit; // all bits are 0 except bit number nBit
+				long mask = 1L << nBit; // all bits are 0 except bit number nBit
 				result = number | mask;
 			} else {
-				long mask = ~(1 << nBit); // all bits are 1 except bit number nBit
+				long mask = ~(1L << nBit); // all bits are 1 except bit number nBit
 				result = number & mask;
 			}
 		}
@@ -63,7 +63,7 @@ public class BitOperations {
 		//TODO
 		long result = -1;
 		if (checkNbit(nBit)) {
-			long mask = 1 << nBit; // all bits are 0 except bit number nBit
+			long mask = 1L << nBit; // all bits are 0 except bit number nBit
 			result = number ^ mask;
 		}
 		return result;
