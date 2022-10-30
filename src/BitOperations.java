@@ -17,7 +17,7 @@ public class BitOperations {
 		int result = -1;
 		if (checkNbit(nBit)) {
 			long mask = 1 << nBit; // all bits are 0 except bit number nBit
-			if ((number & mask) > 0) {
+			if ((number & mask) != 0) {
 				result = 1;
 			} else {
 				result = 0;
