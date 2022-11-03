@@ -6,6 +6,8 @@
  *
  */
 public class BitOperations {
+	private static final int N_BITS = 64;
+
 	/**
 	 * 
 	 * @param number - any number
@@ -17,11 +19,7 @@ public class BitOperations {
 		int result = -1;
 		if (checkNbit(nBit)) {
 			long mask = getMask(nBit); // all bits are 0 except bit number nBit
-			if ((number & mask) != 0) {
-				result = 1;
-			} else {
-				result = 0;
-			}
+			result = (number & mask) != 0 ? 1 : 0;
 		}
 		return result;
 	}
@@ -32,7 +30,7 @@ public class BitOperations {
 	 * @return true if number of bit is valid
 	 */
 	private static boolean checkNbit(int nBit) {
-		return nBit < 64 && nBit >= 0;
+		return nBit < N_BITS && nBit >= 0;
 	}
 	
 	/**
@@ -56,11 +54,7 @@ public class BitOperations {
 		long result = -1;
 		long mask = getMask(nBit); // all bits are 0 except bit number nBit
 		if (checkNbit(nBit)) {
-			if (value) {
-				result = number | mask;
-			} else {
-				result = number & ~mask;
-			}
+			result = value ? (number | mask) : (number & ~mask);
 		}
 		return result;
 	}
@@ -69,14 +63,34 @@ public class BitOperations {
 	 * 
 	 * @param number - any number
 	 * @param nBit - bit's number
-	 * @return new number in which nBit will be inverse
+	 * @return new number in which nBit will be invert
 	 */
-	static public long inverseBitValue(long number, int nBit) {
+	static public long invertBitValue(long number, int nBit) {
 		//TODO
 		long result = -1;
 		if (checkNbit(nBit)) {
 			long mask = getMask(nBit);// all bits are 0 except bit number nBit
 			result = number ^ mask;
+		}
+		return result;
+	}
+	
+	static public int leadingZeros(long number) {
+		int result = 0;
+		int nBit = N_BITS - 1;
+		while(nBit >= 0 && getBitValue(number, nBit) == 0) {
+			result++;
+			nBit--;
+		}
+		return result;
+	}
+	
+	static public int onesInNumber(long number) {
+		int result = 0;
+		for (int i = 0; i < N_BITS; i++) {
+			if (getBitValue(number, i) == 1) {
+				result++;
+			}
 		}
 		return result;
 	}
