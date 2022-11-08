@@ -15,6 +15,8 @@ public class MyArraysTest {
 		int[] expectedResult = {1, 2, 3, 8};
 		assertArrayEquals(expectedResult, MyArrays.removeNumber(new int[] {1,2,3,16,8}, 3));
 		assertArrayEquals(new int[] {}, MyArrays.removeNumber(new int[] {1}, 0));
+		assertArrayEquals(expectedResult, MyArrays.removeNumber(new int[] {1,2,3,8}, 10));
+		
 	}
 	
 	@Test

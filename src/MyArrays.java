@@ -20,17 +20,13 @@ public class MyArrays {
 	 * if index doesn't exist in given array, return array
 	 */
 	public static int[] removeNumber(int[] array, int index) {
-		if (array.length == 0) {
+		if (array.length == 0 || index >= array.length) {
 			return array;
 		}
 		
 		int[] res = new int[array.length - 1];
-		if (index >= array.length) {
-			res = array;
-		} else {
-			System.arraycopy(array, 0, res, 0, index);
-			System.arraycopy(array, index + 1, res, index, array.length - index - 1);
-		}
+		System.arraycopy(array, 0, res, 0, index);
+		System.arraycopy(array, index + 1, res, index, array.length - index - 1);
 		
 		return res;
 	}
