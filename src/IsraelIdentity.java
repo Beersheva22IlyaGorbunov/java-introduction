@@ -1,6 +1,7 @@
-import java.util.Arrays;
 
 public class IsraelIdentity {
+	// ID_LENGTH can be equal to every odd number more than 1
+	public static final int ID_LENGTH = 9;
 /**
  * 
  * @param id
@@ -12,26 +13,22 @@ public class IsraelIdentity {
  * 
  */
 	public static boolean verify(int id) {
+		int controlSum = getControlSum(id);
+		
+		return controlSum % 10 == 0 ? true : false;
+	}
+	
+	private static int getControlSum(int number) {
 		int controlSum = 0;
-		int[] idDigits = Numbers.getDigits(id);
+		int[] idDigits = Numbers.getDigits(number);
 		for(int i = 0; i < idDigits.length; i++) {
 			if (i % 2 == 0) {
 				controlSum += idDigits[i];
 			} else {
-				controlSum += getDoubledOdd(idDigits[i] * 2);
+				controlSum += Numbers.getSumDigits(idDigits[i] * 2);
 			}
 		}
-		return controlSum % 10 == 0 ? true : false;
-	}
-	
-	public static int getDoubledOdd(int number) {
-		int result = 0;
-		if (number > 9) {
-			result = number % 10 + number / 10;
-		} else {
-			result = number;
-		}
-		return result;
+		return controlSum;
 	}
 /**
  * 
@@ -39,22 +36,14 @@ public class IsraelIdentity {
  * cannot be 0 on first position
  * cycle not more than 9 iterations
  */
-	public static int generateRandomId() {
-		int[] idArr = new int[9];
-		int controlSum = 0;
+	public static int generateRandomId() {		
+		int randomMin = (int) Math.pow(10, ID_LENGTH - 2);
+		int randomMax = (int) Math.pow(10, ID_LENGTH - 1);
+		int id = SportLotoAppl.getRandomInt(randomMin, randomMax) * 10;
 		
-		idArr[0] = SportLotoAppl.getRandomInt(1, 9);
-		controlSum += idArr[0];
+		int controlSum = getControlSum(id / 10);
+		id += controlSum % 10 == 0 ? 0 : 10 - controlSum % 10;
 		
-		for (int i = 1; i < 8; i ++) {
-			idArr[i] = SportLotoAppl.getRandomInt(0, 9);
-			if (i % 2 == 0) {
-				controlSum += idArr[i];
-			} else {
-				controlSum += getDoubledOdd(idArr[i] * 2);
-			}
-		}
-		idArr[idArr.length - 1] = controlSum % 10 == 0 ? 0 : 10 - controlSum % 10;
-		return Numbers.getNumberFromDigits(idArr);
+		return id;
 	}
 }

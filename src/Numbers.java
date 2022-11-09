@@ -28,7 +28,7 @@ public class Numbers {
 		return isHappy ;
 	}
 	
-	static private int getSumDigits(int number) {
+	static public int getSumDigits(int number) {
 		int result = 0;
 		do {
 			result += number % 10;
