@@ -13,23 +13,37 @@ public class IsraelIdentity {
  * 
  */
 	public static boolean verify(int id) {
-		int controlSum = getControlSum(id);
+		int[] digits = Numbers.getDigits(id);
+		boolean res = false;
 		
-		return controlSum % 10 == 0 ? true : false;
+		if (ID_LENGTH == digits.length) {
+			int controlSum = getControlSum(digits);
+			res = controlSum % 10 == 0 ? true : false;
+		}
+		
+		return res;
 	}
 	
-	private static int getControlSum(int number) {
-		int controlSum = 0;
-		int[] idDigits = Numbers.getDigits(number);
-		for(int i = 0; i < idDigits.length; i++) {
-			if (i % 2 == 0) {
-				controlSum += idDigits[i];
-			} else {
-				controlSum += Numbers.getSumDigits(idDigits[i] * 2);
-			}
-		}
-		return controlSum;
+	private static int getControlSum(int[] digits) {
+		return sumEvenIndexes(digits) + sumOddIndexes(digits);
 	}
+	
+	private static int sumOddIndexes(int[] digits) {
+		int sum = 0;
+		for(int i = 0; i < digits.length; i += 2) {
+			sum += digits[i];
+		}
+		return sum;
+	}
+
+	private static int sumEvenIndexes(int[] digits) {
+		int sum = 0;
+		for(int i = 1; i < digits.length; i += 2) {
+			sum += Numbers.getSumDigits(digits[i] * 2);
+		}
+		return sum;
+	}
+
 /**
  * 
  * @return random number of 9 digits, which matched right IsraelId
@@ -39,11 +53,17 @@ public class IsraelIdentity {
 	public static int generateRandomId() {		
 		int randomMin = (int) Math.pow(10, ID_LENGTH - 2);
 		int randomMax = (int) Math.pow(10, ID_LENGTH - 1);
-		int id = SportLotoAppl.getRandomInt(randomMin, randomMax) * 10;
+		int res = (int) Numbers.getRandomNumber(randomMin, randomMax);
 		
-		int controlSum = getControlSum(id / 10);
-		id += controlSum % 10 == 0 ? 0 : 10 - controlSum % 10;
+		int controlSum = getControlSum(Numbers.getDigits(res));
+		int lastDigit = getLastDigit(controlSum);
 		
-		return id;
+		res = res * 10 + lastDigit;
+		
+		return res;
+	}
+	
+	private static int getLastDigit(int controlSum) {
+		return controlSum % 10 == 0 ? 0 : 10 - controlSum % 10;
 	}
 }
