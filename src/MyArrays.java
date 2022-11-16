@@ -80,12 +80,8 @@ public class MyArrays {
 		int left = 0;
 		int right = arraySorted.length - 1;
 		int middle = right / 2;
-		int result = -1;
-		while (left <= right) {
-			if (number < arraySorted[middle]) {
-				right = middle - 1;
-			} else if (number == arraySorted[middle]) {
-				result = middle;
+		while (left <= right && arraySorted[left] != number) {
+			if (number <= arraySorted[middle]) {
 				right = middle - 1;
 			}
 			else {
@@ -93,10 +89,7 @@ public class MyArrays {
 			}
 			middle = (left + right) / 2;
 		}
-		if (result == -1) {
-			result = -left - 1;
-		}
-		return result;
+		return left < arraySorted.length && arraySorted[left] == number ? left : -left - 1;
 	}
 	/**
 	 * 
@@ -106,32 +99,34 @@ public class MyArrays {
 	public static int[] bubbleSort(int[] array) {
 		int[] resultArray = new int[array.length];
 		System.arraycopy(array, 0, resultArray, 0, array.length);
-		boolean wasReorder = false;
+		int unsortedLength = resultArray.length;
 		
 		do {
-			wasReorder = moveGreaterRight(resultArray);
-		} while (wasReorder == true);
+			unsortedLength = moveGreaterRight(resultArray, unsortedLength - 1);
+		} while (unsortedLength != 0);
 		
 		return resultArray;
 	}
 	/**
 	 * 
-	 * @param resultArray - which mutates by function, compare each pair
+	 * @param array - which mutates by function, compare each pair
 	 * of numbers and bigger move right
-	 * @return true if did at least one swap and false if didn't
+	 * @return int number of last swap
 	 */
-	private static boolean moveGreaterRight(int[] resultArray) {
-		boolean wasReorder;
-		wasReorder = false;
-		for (int j = 0; j < resultArray.length - 1; j++) {
-			if (resultArray[j] > resultArray[j + 1]) {
-				int temp = resultArray[j + 1];
-				resultArray[j + 1] = resultArray[j];
-				resultArray[j] = temp;
-				wasReorder = true;
+	private static int moveGreaterRight(int[] array, int length) {
+		int lastSwap = 0;
+		for (int i = 0; i < length; i++) {
+			if (array[i] > array[i + 1]) {
+				lastSwap = i + 1;
+				swap(array, i, i + 1);
 			}
 		}
-		return wasReorder;
+		return lastSwap;
+	}
+	private static void swap(int[] array, int i, int j) {
+		int temp = array[i];
+		array[i] = array[j];
+		array[j] = temp;
 	}
 	/**
 	 * 
@@ -156,6 +151,9 @@ public class MyArrays {
 					
 					conflictCount ++;
 				}
+			}
+			if (array[i] == array[i - 1] && array[i] == array[secondNumber]) {
+				secondNumber = i;
 			}
 		}
 		
@@ -193,5 +191,49 @@ public class MyArrays {
 			}
 		}
 		return res;
+	}
+	/**
+	 * 
+	 * @param array of short positive numbers
+	 * @param sum
+	 * @return true, if exist pair of elements in array,
+	 * 		   sum of which equals to param sum
+	 */
+	public static boolean isSum2(short[] array, short sum) {
+		long[] foundedElements = new long[sum / 64 + 1];
+		boolean result = false;
+		int i = 0;
+		while (result == false && i < array.length) {
+			if (array[i] <= sum) {
+				short searchedElement = (short) (sum - array[i]);
+				long searchedStorage = foundedElements[searchedElement / 64];
+				int searchedBit = searchedElement % 64;
+				if (BitOperations.getBitValue(searchedStorage, searchedBit) == 0) {
+					foundedElements[array[i] / 64] = BitOperations.setBitValue(foundedElements[array[i] / 64], array[i] % 64, true);
+				} else {
+					result = true;
+				}
+			}
+			i++;
+		}
+		return result;
+	}
+	
+	public static boolean isSum2ByBooleans(short[] array, short sum) {
+		boolean[] foundedElements = new boolean[sum];
+		boolean result = false;
+		int i = 0;
+		while (result == false && i < array.length) {
+			if (array[i] <= sum) {
+				short searchedElement = (short) (sum - array[i]);
+				if (foundedElements[searchedElement] == false) {
+					foundedElements[array[i]] = true;
+				} else {
+					result = true;
+				}
+			}
+			i++;
+		}
+		return result;
 	}
 }

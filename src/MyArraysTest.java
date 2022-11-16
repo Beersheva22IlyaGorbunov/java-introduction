@@ -90,6 +90,7 @@ public class MyArraysTest {
 		int ar5[] = { 1, 2, 3, 4, 10, 5 };
 		int ar6[] = { 2, 1, -3, 4, 5, 10 };
 		int ar7[] = { 3, 2, 1, 4, 5, 6 };
+		int ar8[] = { 6, 5, 5, 5, 5, 6 };
 		assertTrue(MyArrays.isOneSwapForSorted(ar1));
 		assertTrue(MyArrays.isOneSwapForSorted(ar2));
 		assertTrue(MyArrays.isOneSwapForSorted(ar3));
@@ -97,5 +98,38 @@ public class MyArraysTest {
 		assertTrue(MyArrays.isOneSwapForSorted(ar5));
 		assertTrue(MyArrays.isOneSwapForSorted(ar6));
 		assertTrue(MyArrays.isOneSwapForSorted(ar7));
+		assertTrue(MyArrays.isOneSwapForSorted(ar8));
+	}
+	
+	@Test
+	void isSum2TestTrue() {
+		short[] arr1 = { 3, 5, 5, 8, 10, 25, 13};
+		short[] arr2 = { 3, 8, 20, 3455, 32, 34, 90, 875};
+		assertTrue(MyArrays.isSum2(arr1, (short) 16));
+		assertTrue(MyArrays.isSum2(arr2, (short) 3487));
+	}
+	
+	@Test
+	void isSum2TestFalse() {
+		short[] arr1 = { 3, 5, 5, 8, 10, 25, 13};
+		short[] arr2 = { 3, 8, 20, 3455, 32, 34, 90, 875};
+		assertFalse(MyArrays.isSum2(arr1, (short) 2));
+		assertFalse(MyArrays.isSum2(arr2, (short) 3000));
+	}
+	
+	@Test
+	void isSum2TestByBooleanTrue() {
+		short[] arr1 = { 3, 5, 5, 8, 10, 25, 13};
+		short[] arr2 = { 3, 8, 20, 3455, 32, 34, 90, 875};
+		assertTrue(MyArrays.isSum2ByBooleans(arr1, (short) 16));
+		assertTrue(MyArrays.isSum2ByBooleans(arr2, (short) 3487));
+	}
+	
+	@Test
+	void isSum2TestByBooleanFalse() {
+		short[] arr1 = { 3, 5, 5, 8, 10, 25, 13};
+		short[] arr2 = { 3, 8, 20, 3455, 32, 34, 90, 875};
+		assertFalse(MyArrays.isSum2ByBooleans(arr1, (short) 2));
+		assertFalse(MyArrays.isSum2ByBooleans(arr2, (short) 3000));
 	}
 }
