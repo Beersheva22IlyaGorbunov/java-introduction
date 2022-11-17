@@ -200,27 +200,7 @@ public class MyArrays {
 	 * 		   sum of which equals to param sum
 	 */
 	public static boolean isSum2(short[] array, short sum) {
-		long[] foundedElements = new long[sum / 64 + 1];
-		boolean result = false;
-		int i = 0;
-		while (result == false && i < array.length) {
-			if (array[i] <= sum) {
-				short searchedElement = (short) (sum - array[i]);
-				long searchedStorage = foundedElements[searchedElement / 64];
-				int searchedBit = searchedElement % 64;
-				if (BitOperations.getBitValue(searchedStorage, searchedBit) == 0) {
-					foundedElements[array[i] / 64] = BitOperations.setBitValue(foundedElements[array[i] / 64], array[i] % 64, true);
-				} else {
-					result = true;
-				}
-			}
-			i++;
-		}
-		return result;
-	}
-	
-	public static boolean isSum2ByBooleans(short[] array, short sum) {
-		boolean[] foundedElements = new boolean[sum];
+		boolean[] foundedElements = new boolean[sum >= 0 ? sum + 1 : 0x7fff + 1];
 		boolean result = false;
 		int i = 0;
 		while (result == false && i < array.length) {

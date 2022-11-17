@@ -117,19 +117,4 @@ public class MyArraysTest {
 		assertFalse(MyArrays.isSum2(arr2, (short) 3000));
 	}
 	
-	@Test
-	void isSum2TestByBooleanTrue() {
-		short[] arr1 = { 3, 5, 5, 8, 10, 25, 13};
-		short[] arr2 = { 3, 8, 20, 3455, 32, 34, 90, 875};
-		assertTrue(MyArrays.isSum2ByBooleans(arr1, (short) 16));
-		assertTrue(MyArrays.isSum2ByBooleans(arr2, (short) 3487));
-	}
-	
-	@Test
-	void isSum2TestByBooleanFalse() {
-		short[] arr1 = { 3, 5, 5, 8, 10, 25, 13};
-		short[] arr2 = { 3, 8, 20, 3455, 32, 34, 90, 875};
-		assertFalse(MyArrays.isSum2ByBooleans(arr1, (short) 2));
-		assertFalse(MyArrays.isSum2ByBooleans(arr2, (short) 3000));
-	}
 }
