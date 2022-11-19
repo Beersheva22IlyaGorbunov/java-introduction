@@ -17,10 +17,12 @@ public class Strings {
 				helper[str1Arr[i]]++;
 				helper[str2Arr[i]]--;
 			}
-			for (int i = 0; i < helper.length; i++) {
-				if (helper[i] != 0) {
+			int j = 0;
+			while (j < helper.length && result) {
+				if (helper[j] != 0) {
 					result = false;
 				}
+				j++;
 			}
 		} else {
 			result = false;
@@ -40,10 +42,9 @@ public class Strings {
 		}
 		int arrayIndex = 0;
 		for (int j = 0; j < helper.length; j++) {
-			while (helper[j] > 0) {
+			for (int m = 0; m < helper[j]; m++) {
 				strArr[arrayIndex] = Byte.toString((byte) (j - 128));
 				arrayIndex ++;
-				helper[j] --;
 			}
 		}
 	}
