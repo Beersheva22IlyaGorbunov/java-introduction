@@ -9,23 +9,31 @@ public class Strings {
 	 */
 	public static boolean isAnagram(String str1, String str2) {
 		boolean result = true;
-		char[] str1Arr = str1.toCharArray();
-		if (str1Arr.length == str2.length()) {
-			char[] str2Arr = str2.toCharArray();
-			int[] helper = new int[256];
-			for (int i = 0; i < str1Arr.length; i++) {
-				helper[str1Arr[i]]++;
-				helper[str2Arr[i]]--;
-			}
-			int j = 0;
-			while (j < helper.length && result) {
-				if (helper[j] != 0) {
-					result = false;
-				}
-				j++;
-			}
+		if (str1.length() == str2.length()) {
+			int[] helper = fillHelper(str1, str2);
+			result = checkHelper(result, helper);
 		} else {
 			result = false;
+		}
+		return result;
+	}
+
+	private static int[] fillHelper(String str1, String str2) {
+		int[] helper = new int[Byte.MAX_VALUE];
+		for (int i = 0; i < str1.length(); i++) {
+			helper[str1.charAt(i)]++;
+			helper[str2.charAt(i)]--;
+		}
+		return helper;
+	}
+	
+	private static boolean checkHelper(boolean result, int[] helper) {
+		int j = 0;
+		while (j < helper.length && result) {
+			if (helper[j] != 0) {
+				result = false;
+			}
+			j++;
 		}
 		return result;
 	}
@@ -34,18 +42,38 @@ public class Strings {
 	 * @param strArr which would be sorted by this method
 	 */
 	public static void sortStringNumbers(String[] strArr) {
-		int helperLength = Byte.MAX_VALUE - Byte.MIN_VALUE;
-		int[] helper = new int[helperLength + 1];
+		int offset = Byte.MAX_VALUE + 1;
+		int[] helper = new int[offset * 2];
+		fillHelper(strArr, offset, helper);
+		sortFromHelper(strArr, offset, helper);
+	}
+
+	private static void fillHelper(String[] strArr, int offset, int[] helper) {
 		for (int i = 0; i < strArr.length; i++) {
-			byte number = Byte.parseByte(strArr[i]);
-			helper[number + 128] ++ ;
+			int number = Integer.parseInt(strArr[i]);
+			helper[number + offset] ++ ;
 		}
+	}
+
+	private static void sortFromHelper(String[] strArr, int offset, int[] helper) {
 		int arrayIndex = 0;
 		for (int j = 0; j < helper.length; j++) {
 			for (int m = 0; m < helper[j]; m++) {
-				strArr[arrayIndex] = Byte.toString((byte) (j - 128));
+				strArr[arrayIndex] = Byte.toString((byte) (j - offset));
 				arrayIndex ++;
 			}
 		}
+	}
+	
+	public static String javaNameExp() {
+		return "[a-zA-Z$][\\w$]*||_[\\w$_]+";
+	}
+	
+	public static String ipv4Octet() {
+		return "([\\d]{1,2}|([0-1]|2[0-4])[\\d]{1,2}|25[0-5])";
+	}
+	
+	public static String ipv4() {
+		return "(" + ipv4Octet() + "\\.){3}" + ipv4Octet();
 	}
 }
