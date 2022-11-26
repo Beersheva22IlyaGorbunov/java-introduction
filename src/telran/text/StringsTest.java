@@ -1,16 +1,14 @@
-import static org.junit.Assert.assertArrayEquals;
+package telran.text;
 import static org.junit.jupiter.api.Assertions.*;
-
-import java.util.Arrays;
-
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+import static telran.text.Strings.*;
 
 class StringsTest {
 
 	@Test
 	void isAnagramTest() {
 		String word = "yellow";
-		assertTrue(Strings.isAnagram(word, "loweyl"));
+		assertTrue(isAnagram(word, "loweyl"));
 		assertTrue(Strings.isAnagram(word, "elolyw"));
 		assertTrue(Strings.isAnagram(word, "wolley"));
 		assertTrue(Strings.isAnagram(word, "loleyw"));
@@ -46,7 +44,9 @@ class StringsTest {
 		assertTrue("243".matches(Strings.ipv4Octet()));
 		assertTrue("0".matches(Strings.ipv4Octet()));
 		assertFalse("".matches(Strings.ipv4Octet()));
-		assertFalse("1985".matches(Strings.ipv4Octet()));
+		assertFalse("2444".matches(Strings.ipv4Octet()));
+		assertFalse("1111".matches(Strings.ipv4Octet()));
+		assertFalse("198 100".matches(Strings.ipv4Octet()));
 		assertFalse("256".matches(Strings.ipv4Octet()));
 		assertFalse("369".matches(Strings.ipv4Octet()));
 		assertFalse("0000".matches(Strings.ipv4Octet()));	
@@ -68,5 +68,36 @@ class StringsTest {
 		assertFalse("255.255.255.255.245".matches(Strings.ipv4()));
 		assertFalse("256.255.255".matches(Strings.ipv4()));
 		assertFalse("256.255".matches(Strings.ipv4()));
+	}
+	
+	@Test
+	void isArithmeticExpressionTest() {
+		assertTrue(isArithmeticExpression("   5 +    .23 "));
+		assertTrue(isArithmeticExpression("((5 + ((.23)"));
+	}
+	
+	@Test
+	void computeExpressionTest() {
+		assertEquals(10.5, computeArithmeticExpression("2 + 2 + 1 * 2 + 0.5", null, null));
+		assertEquals(10.5, computeArithmeticExpression("a + 2 + c * 2 + 0.5", new double[] {2, 1},
+				new String[] {"a", "c"}));
+		assertEquals(10.5, computeArithmeticExpression("((a + 2 + c * 2 + 0.5))", new double[] {2, 1},
+				new String[] {"a", "c"}));
+		assertEquals(10.5, computeArithmeticExpression("(a + 2) + c * 2 + 0.5", new double[] {2, 1},
+				new String[] {"a", "c"}));
+		assertTrue(Double.isNaN(computeArithmeticExpression("2 # 2 ++ 10", null, null)));
+		assertTrue(Double.isNaN(computeArithmeticExpression("(2 + 2 + 10", null, null)));
+		assertTrue(Double.isNaN(computeArithmeticExpression("2( + 2 + 10", null, null)));
+		assertTrue(Double.isNaN(computeArithmeticExpression("2 (+ 2 + 10", null, null)));
+		assertTrue(Double.isNaN(computeArithmeticExpression(")2 + 2 + 10", null, null)));
+		assertTrue(Double.isNaN(computeArithmeticExpression("2 + 2 + 10(", null, null)));
+		assertTrue(Double.isNaN(computeArithmeticExpression("2 +() 2 + 10", null, null)));
+		assertTrue(Double.isNaN(computeArithmeticExpression("((2 + 2 + 10)", null, null)));
+		assertTrue(Double.isNaN(computeArithmeticExpression("a + 2 + c * 2 + d23", new double[] {2, 1},
+				new String[] {"a", "c"})));
+		assertTrue(Double.isNaN(computeArithmeticExpression(")a + 2 + c * 2", new double[] {2, 1},
+				new String[] {"a", "c"})));
+		assertTrue(Double.isNaN(computeArithmeticExpression("(())a + 2 + c * 2", new double[] {2, 1},
+				new String[] {"a", "c"})));
 	}
 }
