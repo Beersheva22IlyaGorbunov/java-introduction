@@ -101,5 +101,6 @@ class StringsTest {
 				new String[] {"a", "c"})));
 		assertTrue(Double.isNaN(computeArithmeticExpression("(())a + 2 + c * 2", new double[] {2, 1},
 				new String[] {"a", "c"})));
+		assertEquals(20.0, computeArithmeticExpression("$+2*10", null, new String[]{"$"}));
 	}
 }
