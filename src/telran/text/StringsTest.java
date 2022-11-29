@@ -79,6 +79,7 @@ class StringsTest {
 	@Test
 	void computeExpressionTest() {
 		assertEquals(10.5, computeArithmeticExpression("2 + 2 + 1 * 2 + 0.5", null, null));
+		assertEquals(10.5, computeArithmeticExpression("2 + 2 + c + 1 * 2 + 0.5", null, new String[] {"c"}));
 		assertEquals(10.5, computeArithmeticExpression("a + 2 + c * 2 + 0.5", new double[] {2, 1},
 				new String[] {"a", "c"}));
 		assertEquals(10.5, computeArithmeticExpression("((a + 2 + c * 2 + 0.5))", new double[] {2, 1},
@@ -86,6 +87,7 @@ class StringsTest {
 		assertEquals(10.5, computeArithmeticExpression("(a + 2) + c * 2 + 0.5", new double[] {2, 1},
 				new String[] {"a", "c"}));
 		assertTrue(Double.isNaN(computeArithmeticExpression("2 # 2 ++ 10", null, null)));
+		assertTrue(Double.isNaN(computeArithmeticExpression("2 + c + 10", null, null)));
 		assertTrue(Double.isNaN(computeArithmeticExpression("(2 + 2 + 10", null, null)));
 		assertTrue(Double.isNaN(computeArithmeticExpression("2( + 2 + 10", null, null)));
 		assertTrue(Double.isNaN(computeArithmeticExpression("2 (+ 2 + 10", null, null)));

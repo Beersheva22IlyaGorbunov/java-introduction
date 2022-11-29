@@ -1,4 +1,7 @@
 package telran.text;
+
+import java.util.Arrays;
+
 public class Strings {
 	/**
 	 * 
@@ -81,17 +84,17 @@ public class Strings {
 	private static String arithmeticExp() {
 		String operatorExp = operator();
 		String operandExp = operand();
-		return String.format("\\(*%1$s(%2$s\\(*%1$s\\)*)*", operandExp, operatorExp);
+		return String.format("%1$s(%2$s%1$s)*", operandExp, operatorExp);
 	}
 
-	private static String numberOperand() {
+	private static String numberExp() {
 		return "(\\d+\\.?\\d*|\\.\\d+)";
 	}
 	
 	private static String operand() {
-		String numberOperandExp = numberOperand();
+		String numberOperandExp = numberExp();
 		String varNameExp = javaNameExp();
-		return String.format("(%1$s|%2$s)", numberOperandExp, varNameExp);
+		return String.format("(\\(*(%s|%s)\\)*)", numberOperandExp, varNameExp);
 	}
 	
 	private static String operator() {
@@ -113,6 +116,8 @@ public class Strings {
 													 double[] values, 
 													 String[] names) {
 		Double res = Double.NaN;
+		names = getUpdatedNames(names);
+		values = getUpdatedValues(values, names);
 		if (isArithmeticExpression(expression) && checkBraces(expression)) {
 			expression = expression.replaceAll("[\\s()]+", "");
 			String[] operands = expression.split(operator());
@@ -132,6 +137,20 @@ public class Strings {
 		return res;
 	}
 
+	private static double[] getUpdatedValues(double[] values, String[] names) {
+		if (values == null) {
+			values = new double[0];
+		}
+		if (values.length != names.length) {
+			values = Arrays.copyOf(values, names.length);
+		}
+		return values;
+	}
+
+	private static String[] getUpdatedNames(String[] names) {
+		return names == null ? new String[0] : names;
+	}
+
 	private static Double computeOperation(Double firstOperand, String operation, Double secondOperand) {
 		switch(operation) {
 			case "+": firstOperand += secondOperand; break;
@@ -144,36 +163,31 @@ public class Strings {
 	}
 
 	private static Double getOperandValue(String operand, double[] values, String[] names) {
-		double res = Double.NaN;
-		if (operand.matches(numberOperand())) {
-			res = Double.parseDouble(operand);
+		Double res = Double.NaN;
+		if (operand.matches(numberExp())) {
+			res = Double.valueOf(operand);
 		} else {
-			int i = 0;
-			while (i < names.length && Double.isNaN(res)) {
-				if (names[i].compareTo(operand) == 0) {
-					res = values[i];
-				}
-				i++;
+			int findedIndex = Arrays.binarySearch(names, operand);
+			if (findedIndex > -1) {
+				res = values[findedIndex];
 			}
 		}
 		return res;
 	}
 	
 	private static boolean checkBraces(String expression) {
-		int counter = 0;
-		boolean res = true;
+		int count = 0;
 		int i = 0;
-		while (i < expression.length() && res) {
-			if (expression.charAt(i) == '(') {
-				counter ++;
-			} else if (expression.charAt(i) == ')') {
-				counter--;
-			}
-			if (counter < 0) {
-				res = false;
+		int length = expression.length();
+		while (i < length && count > -1) {
+			char symbol = expression.charAt(i);
+			if (symbol == '(') {
+				count ++;
+			} else if (symbol == ')') {
+				count--;
 			}
 			i++;
 		}
-		return res && counter == 0;
+		return count == 0;
 	}
 }
