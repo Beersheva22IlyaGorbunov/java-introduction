@@ -3,35 +3,17 @@ package telran.digital.numbers;
 public class DigitalNumbersPrinting {
 	private static final String SYMBOL = "*";
 
-	public static void displayDigitalNumber(int number, int offset, int height, int width, boolean adaptive) {
-		height = checkHeight(height);
-		width = checkWidth(height, width);
-		offset = checkOffset(offset, width);
-		
-		if (adaptive) {
-			width = adaptWidth(height, width);
-			offset = adaptOffset(offset, width);
-		}
-		
-		String[] res = getStringsToPrint(number, offset, height, width);
+	public static void displayDigitalNumber(int number, int offset, int height, int width) {
+		String[] res = sizesAreValid(width, height) ? getStringsToPrint(number, offset, height, width) : new String[0];
 
 		displayStrings(res);
 	}
 	
-	public static void displayDigitalNumber(int number, int offset, int height, int width) {
-		height = checkHeight(height);
-		width = checkWidth(height, width);
-		offset = checkOffset(offset, width);
-		
-		width = adaptWidth(height, width);
-		offset = adaptOffset(offset, width);
-		
-		String[] res = getStringsToPrint(number, offset, height, width);
-
-		displayStrings(res);
+	private static boolean sizesAreValid(int width, int height) {
+		return (width > 2 && height > 4) ? true : false;
 	}
 
-	private static String[] getStringsToPrint(int number, int offset, int height, int width) {
+	public static String[] getStringsToPrint(int number, int offset, int height, int width) {
 		String[] res = new String[height];
 		int[] digits = getDigits(number);
 
@@ -47,51 +29,6 @@ public class DigitalNumbersPrinting {
 			}
 		}
 		return res;
-	}
-
-	private static int checkHeight(int height) {
-		if (height < 5) {
-			height = 5;
-		}
-
-		if (height % 2 != 1) {
-			height++;
-		}
-		return height;
-	}
-
-	private static int checkWidth(int height, int width) {
-		if (width < 3) {
-			width = 3;
-		}
-		return width;
-	}
-
-	private static int checkOffset(int offset, int width) {
-		if (offset < 1) {
-			offset = 1;
-		}
-		return offset;
-	}
-	
-	private static int adaptWidth(int height, int width) {
-		if (height / width > 2) {
-			width = height / 3 + 2;
-		}
-		if (width > height) {
-			width = height;
-		}
-		return width;
-	}
-
-	private static int adaptOffset(int offset, int width) {
-		if (offset < width / 3) {
-			offset = width / 3;
-		}
-		if (offset > width) {
-			offset = width;
-		}
-		return offset;
 	}
 
 	private static String[] printDigit(int digit, int offset, int height, int width) {
@@ -198,8 +135,8 @@ public class DigitalNumbersPrinting {
 		String[] topVerticalLines = twoVerticalLines(offset, width, vertCenter);
 		System.arraycopy(topVerticalLines, 0, res, 0, vertCenter);
 
-		String[] bottomVerticalLine = verticalLine(offset + width - 1, width + offset, vertCenter);
-		System.arraycopy(bottomVerticalLine, 0, res, vertCenter + 1, vertCenter);
+		String[] bottomVerticalLine = verticalLine(offset + width - 1, width + offset, height - vertCenter);
+		System.arraycopy(bottomVerticalLine, 0, res, vertCenter, height - vertCenter);
 		res[vertCenter] = line(offset, width);
 		return res;
 	}
@@ -267,7 +204,7 @@ public class DigitalNumbersPrinting {
 		return res;
 	}
 
-	private static int getNdigits(long number) {
+	public static int getNdigits(long number) {
 		int result = 0;
 		do {
 			number /= 10;
