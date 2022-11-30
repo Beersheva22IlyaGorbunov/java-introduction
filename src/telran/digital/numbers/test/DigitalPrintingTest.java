@@ -32,6 +32,7 @@ public class DigitalPrintingTest {
 	}
 	
 	@Test
+	@Disabled
 	void checkArraysSize() {
 		int number = 1234567890;
 		int offset = 3;
