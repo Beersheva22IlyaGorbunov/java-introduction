@@ -2,6 +2,7 @@ package telran.digital.numbers;
 
 public class DigitalNumbersPrinting {
 	private static final String SYMBOL = "*";
+	private static final int MARGIN = 4;
 
 	public static void displayDigitalNumber(int number, int offset, int height, int width) {
 		String[] res = sizesAreValid(width, height) ? getStringsToPrint(number, offset, height, width) : new String[0];
@@ -16,191 +17,177 @@ public class DigitalNumbersPrinting {
 	public static String[] getStringsToPrint(int number, int offset, int height, int width) {
 		String[] res = new String[height];
 		int[] digits = getDigits(number);
+		String[][] cachedDigits = new String[10][];
 
 		String[] firstDigit = printDigit(digits[0], offset, height, width);
-		for (int j = 0; j < res.length; j++) {
-			res[j] = firstDigit[j];
-		}
-
+		cachedDigits[digits[0]] = createFirstDigit(res, firstDigit, offset);
+		
 		for (int i = 1; i < digits.length; i++) {
-			String[] currentDigit = printDigit(digits[i], offset, height, width);
-			for (int j = 0; j < res.length; j++) {
-				res[j] += currentDigit[j];
+			String[] printableDigit = new String[digits.length];
+			if (cachedDigits[digits[i]] == null) {
+				printableDigit = printDigit(digits[i], offset, height, width);
+				cachedDigits[digits[i]] = printableDigit;
+			} else {
+				printableDigit = cachedDigits[digits[i]];
 			}
+			joinDigit(res, printableDigit);
+
 		}
 		return res;
+	}
+
+	private static String[] createFirstDigit(String[] res, String[] firstDigit, int offset) {
+		for (int j = 0; j < res.length; j++) {
+			res[j] = " ".repeat(offset) + firstDigit[j];
+		}
+		return res;
+	}
+
+	private static void joinDigit(String[] res, String[] currentDigit) {
+		for (int j = 0; j < res.length; j++) {
+			res[j] += currentDigit[j];
+		}
 	}
 
 	private static String[] printDigit(int digit, int offset, int height, int width) {
-		String[] res = new String[height];
 		switch (digit) {
-		case 0:
-			res = zero(offset, width, height);
-			break;
-		case 1:
-			res = one(offset, width, height);
-			break;
-		case 2:
-			res = two(offset, width, height);
-			break;
-		case 3:
-			res = three(offset, width, height);
-			break;
-		case 4:
-			res = four(offset, width, height);
-			break;
-		case 5:
-			res = five(offset, width, height);
-			break;
-		case 6:
-			res = six(offset, width, height);
-			break;
-		case 7:
-			res = seven(offset, width, height);
-			break;
-		case 8:
-			res = eight(offset, width, height);
-			break;
-		case 9:
-			res = nine(offset, width, height);
-			break;
-		default:
-			res = null;
+			case 0: return zero(width, height);
+			case 1: return one(width, height);
+			case 2: return two(width, height);
+			case 3: return three(width, height);
+			case 4: return four(width, height);
+			case 5: return five(width, height);
+			case 6: return  six(width, height);
+			case 7: return  seven(width, height);
+			case 8: return  eight(width, height);
+			case 9: return  nine(width, height);
 		}
-		return res;
+		return null;
 	}
 
-	public static String line(int offset, int length) {
-		return " ".repeat(offset) + SYMBOL.repeat(length);
+	public static String line(int length) {
+		return " ".repeat(MARGIN) + SYMBOL.repeat(length);
 	}
 
-	public static String[] verticalLine(int offset, int fullWidth, int height) {
+	public static String[] verticalLine(int padding, int width, int height) {
 		String[] res = new String[height];
 		for (int i = 0; i < res.length; i++) {
-			res[i] = " ".repeat(offset) + SYMBOL + " ".repeat(fullWidth - offset - 1);
+			res[i] = " ".repeat(padding + MARGIN) + SYMBOL + " ".repeat(width - padding - 1);
 		}
 		return res;
 	}
-
-	public static String[] twoVerticalLines(int offset, int width, int height) {
+	
+	public static String[] twoVerticalLines(int width, int height) {
 		String[] res = new String[height];
 		for (int i = 0; i < res.length; i++) {
-			res[i] = " ".repeat(offset) + SYMBOL + " ".repeat(width - 2) + SYMBOL;
+			res[i] = " ".repeat(MARGIN) + SYMBOL + " ".repeat(width - 2) + SYMBOL;
 		}
 		return res;
 	}
 
-	private static String[] zero(int offset, int width, int height) {
+	private static String[] zero(int width, int height) {
 		String[] res = new String[height];
-		res = twoVerticalLines(offset, width, height);
-		res[0] = line(offset, width);
-		res[height - 1] = line(offset, width);
+		res = twoVerticalLines(width, height);
+		res[0] = line(width);
+		res[height - 1] = line(width);
 		return res;
 	}
 
-	private static String[] one(int offset, int width, int height) {
-		return verticalLine(offset + width - 1, width + offset, height);
+	private static String[] one(int width, int height) {
+		return verticalLine(width - 1, width, height);
 	}
 
-	private static String[] two(int offset, int width, int height) {
+	private static String[] two(int width, int height) {
 		String[] res = new String[height];
 		int vertCenter = (height - 1) / 2;
 
-		String[] rightVerticalLine = verticalLine(offset + width - 1, width + offset, vertCenter);
+		String[] rightVerticalLine = verticalLine(width - 1, width, vertCenter);
 		System.arraycopy(rightVerticalLine, 0, res, 0, vertCenter);
 
-		String[] leftVerticalLine = verticalLine(offset, width + offset, vertCenter);
+		String[] leftVerticalLine = verticalLine(0, width, vertCenter);
 		System.arraycopy(leftVerticalLine, 0, res, vertCenter + 1, vertCenter);
 
-		res[0] = line(offset, width);
-		res[vertCenter] = line(offset, width);
-		res[height - 1] = line(offset, width);
+		res[0] = line(width);
+		res[vertCenter] = line(width);
+		res[height - 1] = line(width);
 		return res;
 	}
 
-	private static String[] three(int offset, int width, int height) {
+	private static String[] three(int width, int height) {
 		String[] res = new String[height];
 		int vertCenter = (height - 1) / 2;
-		res = verticalLine(offset + width - 1, width + offset, height);
-		res[0] = line(offset, width);
-		res[vertCenter] = line(offset, width);
-		res[height - 1] = line(offset, width);
+		res = verticalLine(width - 1, width, height);
+		res[0] = line(width);
+		res[vertCenter] = line(width);
+		res[height - 1] = line(width);
 		return res;
 	}
 
-	private static String[] four(int offset, int width, int height) {
+	private static String[] four(int width, int height) {
 		String[] res = new String[height];
 		int vertCenter = (height - 1) / 2;
 
-		String[] topVerticalLines = twoVerticalLines(offset, width, vertCenter);
+		String[] topVerticalLines = twoVerticalLines(width, vertCenter);
 		System.arraycopy(topVerticalLines, 0, res, 0, vertCenter);
 
-		String[] bottomVerticalLine = verticalLine(offset + width - 1, width + offset, height - vertCenter);
+		String[] bottomVerticalLine = verticalLine(width - 1, width, height - vertCenter);
 		System.arraycopy(bottomVerticalLine, 0, res, vertCenter, height - vertCenter);
-		res[vertCenter] = line(offset, width);
+		res[vertCenter] = line(width);
 		return res;
 	}
 
-	private static String[] five(int offset, int width, int height) {
-		String[] res = new String[height];
+	private static String[] five(int width, int height) {
+		String[] res = eight(width, height);
 		int vertCenter = (height - 1) / 2;
 
-		String[] topVerticalLine = verticalLine(offset, width + offset, vertCenter);
+		String[] topVerticalLine = verticalLine(0, width, vertCenter);
 		System.arraycopy(topVerticalLine, 0, res, 0, vertCenter);
 
-		String[] bottomVerticalLine = verticalLine(offset + width - 1, width + offset, vertCenter);
+		String[] bottomVerticalLine = verticalLine(width - 1, width, vertCenter);
 		System.arraycopy(bottomVerticalLine, 0, res, vertCenter + 1, vertCenter);
 
-		res[0] = line(offset, width);
-		res[vertCenter] = line(offset, width);
-		res[height - 1] = line(offset, width);
+		res[0] = line(width);
+		res[vertCenter] = line(width);
+		res[height - 1] = line(width);
+
 		return res;
 	}
 
-	private static String[] six(int offset, int width, int height) {
-		String[] res = new String[height];
+	private static String[] six(int width, int height) {
+		String[] res = five(width, height);
 		int vertCenter = (height - 1) / 2;
 
-		String[] topVerticalLine = verticalLine(offset, width + offset, vertCenter);
+		String[] topVerticalLine = verticalLine(0, width, vertCenter);
 		System.arraycopy(topVerticalLine, 0, res, 0, vertCenter);
 
-		String[] bottomVerticalLines = twoVerticalLines(offset, width, vertCenter);
+		String[] bottomVerticalLines = twoVerticalLines(width, vertCenter);
 		System.arraycopy(bottomVerticalLines, 0, res, vertCenter + 1, vertCenter);
-		res[0] = line(offset, width);
-		res[vertCenter] = line(offset, width);
-		res[height - 1] = line(offset, width);
+		res[0] = line(width);
+		res[vertCenter] = line(width);
+		res[height - 1] = line(width);
 		return res;
 	}
 
-	private static String[] seven(int offset, int width, int height) {
-		String[] res = new String[height];
-		res = verticalLine(offset + width - 1, width + offset, height);
-		res[0] = line(offset, width);
+	private static String[] seven(int width, int height) {
+		String[] res = one(width, height);
+		res[0] = line(width);
 		return res;
 	}
 
-	private static String[] eight(int offset, int width, int height) {
-		String[] res = new String[height];
+	private static String[] eight(int width, int height) {
+		String[] res = zero(width, height);
 		int vertCenter = (height - 1) / 2;
-		res = twoVerticalLines(offset, width, height);
-		res[0] = line(offset, width);
-		res[vertCenter] = line(offset, width);
-		res[height - 1] = line(offset, width);
+		res[vertCenter] = line(width);
 		return res;
 	}
 
-	private static String[] nine(int offset, int width, int height) {
-		String[] res = new String[height];
+	private static String[] nine(int width, int height) {
+		String[] res = three(width, height);
 		int vertCenter = (height - 1) / 2;
 
-		String[] topVerticalLines = twoVerticalLines(offset, width, vertCenter);
-		System.arraycopy(topVerticalLines, 0, res, 0, vertCenter);
+		String[] topVerticalLines = twoVerticalLines(width, vertCenter);
+		System.arraycopy(topVerticalLines, 1, res, 1, vertCenter - 1);
 
-		String[] bottomVerticalLine = verticalLine(offset + width - 1, width + offset, vertCenter);
-		System.arraycopy(bottomVerticalLine, 0, res, vertCenter + 1, vertCenter);
-		res[0] = line(offset, width);
-		res[vertCenter] = line(offset, width);
-		res[height - 1] = line(offset, width);
 		return res;
 	}
 

@@ -10,7 +10,7 @@ public class DigitalPrintingTest {
 	@Test
 	@Disabled
 	void lineTest() {
-		System.out.println(line(30, 30));
+		System.out.println(line( 30));
 	}
 	
 	@Test
@@ -22,13 +22,13 @@ public class DigitalPrintingTest {
 	@Test
 	@Disabled
 	void twoVerticalLineTest() {
-		displayStrings(twoVerticalLines(30, 10, 10));
+		displayStrings(twoVerticalLines( 10, 10));
 	}
 
 	
 	@Test
 	void displayDigitalNumberTest() {
-		displayDigitalNumber(1234567890, 3, 7, 7);
+		displayDigitalNumber(1234567890, 3, 8, 7);
 	}
 	
 	@Test
